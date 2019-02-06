@@ -50,7 +50,7 @@ public class ServerApp implements IManualListener, Runnable {
 
     @Override
     public void onProductResultReceived(MessageProductResult message) {
-
+        System.out.println("OEI!");
     }
 
     @Override
@@ -60,11 +60,11 @@ public class ServerApp implements IManualListener, Runnable {
 
         showIntro();
         showWaiting();
-        try {
-            connector.receiveGenericMessage();
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            connector.receiveGenericMessage();
+//        } catch (JMSException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void showIntro() {

@@ -15,6 +15,8 @@ public class Connector {
     Session session;
     Destination destination;
 
+    MessageConsumer consumer;
+
     // Listener to notify when a message has been received
     private IManualListener listener;
 
@@ -42,6 +44,22 @@ public class Connector {
         //Destination represents here our queue 'JCG_QUEUE' on the JMS server.
         //The queue will be created automatically on the server.
         destination = session.createQueue(subject);
+
+        // MessageConsumer is used for receiving (consuming) messages
+        consumer = session.createConsumer(destination);
+
+        consumer.setMessageListener(new MessageListener() {
+
+            @Override
+            public void onMessage(Message msg) {
+                try {
+                    receiveGenericMessage(msg);
+                } catch (JMSException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     public void sendMessage(CustomMessage message) throws JMSException {
@@ -57,18 +75,16 @@ public class Connector {
         System.out.println("Sent message: " + message.toString());
     }
 
-    public void receiveGenericMessage() throws JMSException {
-        // MessageConsumer is used for receiving (consuming) messages
-        MessageConsumer consumer = session.createConsumer(destination);
-
+    public void receiveGenericMessage(Message msg) throws JMSException {
         // Here we receive the message.
-        Message message = consumer.receive();
-
+        Message message = msg;
+        System.out.println("Message received OEI: " + msg.toString());
 
         // Now to determine what kind of message this is
         if (message instanceof ObjectMessage) {
             ObjectMessage oMessage = (ObjectMessage) message;
             CustomMessage customMessage = (CustomMessage) oMessage.getObject();
+            System.out.println("Type: " + customMessage.type.toString());
             switch (customMessage.type) {
                 case Undefined:
                     // ...

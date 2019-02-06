@@ -19,7 +19,7 @@ public class ClientApp implements IManualListener, Runnable {
 
     @Override
     public void onProductSearchReceived(MessageProductSearch message) {
-
+        System.out.println("OEI!");
     }
 
     @Override
